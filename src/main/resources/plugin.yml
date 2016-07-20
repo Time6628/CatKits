@@ -1,11 +1,11 @@
 main: com.kookykraftmc.kits.CatKits
 name: CatKits
-version: 0.1
+version: 0.2
 description: Make kits ez pz.
 author: TimeTheCat
 commands:
   createkit:
-    usage: /createkit <name>
+    usage: /createkit <name> <max uses>
     description: Create a kit.
     default: op
   kit:

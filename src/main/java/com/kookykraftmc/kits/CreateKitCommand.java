@@ -5,17 +5,17 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 /**
  * Created by TimeTheCat on 7/4/2016.
  */
 public class CreateKitCommand implements CommandExecutor {
-    private CatKits plugin = null;
 
-    public CreateKitCommand(CatKits plugin) {
-        this.plugin = plugin;
+    KitUtils kitUtils = null;
+
+    public CreateKitCommand(KitUtils kitUtils) {
+        this.kitUtils = kitUtils;
     }
 
     @Override
@@ -29,16 +29,11 @@ public class CreateKitCommand implements CommandExecutor {
             }
             //if kit name is provided
             else if (args.length == 1) {
-                //get the kit name
-                String kitName = args[0].toLowerCase();
-                //encode the player's inventory to a kit
-                String eInv = KitUtils.toBase64(((Player) sender).getInventory());
-                //get config
-                FileConfiguration config = this.plugin.getConfig();
-                //set the config option
-                config.set("kit." + kitName, eInv);
-                plugin.saveConfig();
-                sender.sendMessage(ChatColor.GREEN + "Kit " + kitName + " created.");
+                kitUtils.makeKit(args[0], (Player) sender);
+            }
+            //if the kit has max uses
+            else if (args.length == 2) {
+                kitUtils.makeKit(args[0], (Player) sender, Integer.parseInt(args[1]));
             }
             //if nothing else matches
             else {

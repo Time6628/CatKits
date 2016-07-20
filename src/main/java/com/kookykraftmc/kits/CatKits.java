@@ -9,7 +9,9 @@ import java.util.logging.Logger;
  * Created by TimeTheCat on 7/3/2016.
  */
 public class CatKits extends JavaPlugin {
+
     Logger l = Logger.getLogger("CatKits");
+    KitUtils kt = null;
 
     @Override
     public void onEnable() {
@@ -25,12 +27,17 @@ public class CatKits extends JavaPlugin {
             saveDefaultConfig();
         }
 
+        l.info("Loading KitUtils...");
+        kt = new KitUtils(this);
+
         l.info("Loading commands...");
-        getCommand("kit").setExecutor(new KitCommand(this));
-        getCommand("createkit").setExecutor(new CreateKitCommand(this));
+        getCommand("kit").setExecutor(new KitCommand(kt));
+        getCommand("createkit").setExecutor(new CreateKitCommand(kt));
     }
 
-    public CatKits getCatKits() {
-        return this;
+    KitUtils getKitUtils() {
+        return kt;
     }
+
+
 }
