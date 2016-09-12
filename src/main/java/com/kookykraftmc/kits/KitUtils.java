@@ -68,17 +68,12 @@ public class KitUtils {
     }
 
     void giveKit(String name, Player player) {
-        //get config
-        FileConfiguration cfg = this.plugin.getConfig();
-
-        //get kit name
-        String kitName = name;
 
         //get encoded string from config
-        String es = (String) cfg.get("kit." + kitName);
+        String es = (String) cfg.get("kit." + name);
 
         //check to make sure kit exists
-        if (es != null && player.hasPermission("catkit.kit." + kitName)) {
+        if (es != null && player.hasPermission("catkit.kit." + name)) {
             try {
                 //get the kit from the base64
                 Inventory inv = KitUtils.fromBase64(es);
@@ -87,21 +82,21 @@ public class KitUtils {
                 ItemStack[] items = Arrays.stream(inv.getContents()).filter(i -> (i != null)).toArray(ItemStack[]::new);
 
                 //get the max uses of the kit
-                int maxUses = cfg.getInt("kit." + kitName + ".uses");
+                int maxUses = cfg.getInt("kit." + name + ".uses");
 
                 //if the kit does not have a max use, give them the kit
                 if (maxUses == 0 || maxUses == -1) {
 
                     player.getInventory().addItem(items);
 
-                    player.sendMessage(ChatColor.GREEN + "You have recieved kit " + kitName);
+                    player.sendMessage(ChatColor.GREEN + "You have recieved kit " + name);
 
                 }
                 //if the kit does have limit
                 else if (maxUses > 0) {
 
                     //get the number of times the player used the kit
-                    int usesByPlayer = cfg.getInt(player.getUniqueId() + "." + kitName + "." + "uses");
+                    int usesByPlayer = cfg.getInt(player.getUniqueId() + "." + name + "." + "uses");
 
                     //if the number of times used is equal or greater than the maxuses, tell 'em they can't have it
                     if (usesByPlayer >= maxUses) {
@@ -113,21 +108,22 @@ public class KitUtils {
                     else {
 
                         //set the number of uses and save ot
-                        cfg.set(player.getUniqueId() + "." + kitName + "." + "uses", ++usesByPlayer);
+                        cfg.set(player.getUniqueId() + "." + name + "." + "uses", ++usesByPlayer);
                         plugin.saveConfig();
 
                         //give them the items
                         player.getInventory().addItem(items);
 
                         //tell em they got it
-                        player.sendMessage(ChatColor.GREEN + "You have recieved kit " + kitName);
+                        player.sendMessage(ChatColor.GREEN + "You have recieved kit " + name);
 
                     }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        } else {
+        }
+        else {
             player.sendMessage(ChatColor.RED + "Kit does not exist or you do not have permission to use it.");
         }
     }
@@ -137,9 +133,6 @@ public class KitUtils {
     }
 
     void makeKit(String name, Player player, int uses) {
-        //get the kit name
-        String kitName = name;
-
         //encode the player's inventory to a kit
         String eInv = KitUtils.toBase64((player.getInventory()));
 
@@ -147,12 +140,12 @@ public class KitUtils {
         FileConfiguration config = this.plugin.getConfig();
 
         //set the config option
-        config.set("kit." + kitName, eInv);
+        config.set("kit." + name, eInv);
 
         //set the kit uses
-        config.set("kit." + kitName + ".uses", uses);
+        config.set("kit." + name + ".uses", uses);
 
         plugin.saveConfig();
-        player.sendMessage(ChatColor.GREEN + "Kit " + kitName + " created.");
+        player.sendMessage(ChatColor.GREEN + "Kit " + name + " created.");
     }
 }

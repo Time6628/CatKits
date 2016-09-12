@@ -26,19 +26,18 @@ public class KitCommand implements CommandExecutor {
             //if no kit is provided
             if (args.length <= 0) {
                 sender.sendMessage(cmd.getUsage());
-
             }
             //if kit is provided
             else if (args.length == 1) {
                 kitUtils.giveKit(args[0], (Player) sender);
-
-            } else {
+            }
+            else {
                 sender.sendMessage(ChatColor.RED + "Please provide a kit name.");
 
             }
-        } else {
+        }
+        else {
             sender.sendMessage(ChatColor.RED + "You do not have permission to use kits.");
-
         }
         return true;
     }
